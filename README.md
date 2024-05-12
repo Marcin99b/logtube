@@ -1,4 +1,5 @@
 # logtube
+[![Build and Test](https://github.com/Marcin99b/logtube/actions/workflows/build.yml/badge.svg)](https://github.com/Marcin99b/logtube/actions/workflows/build.yml)
 
 Search and analysis for logs written in Rust 🦀
 
