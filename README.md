@@ -7,7 +7,7 @@ Search and analysis for logs written in Rust 🦀
 #### First stage
 
 - [ ] Store structured logs on disc
-- [ ] Expose tcp endpoint for logs gathering
+- [x] Expose tcp endpoint for logs gathering
 - [ ] Select tool for storing logs
   - https://github.com/gree/flare is used by Seq
 - [ ] Basic search
