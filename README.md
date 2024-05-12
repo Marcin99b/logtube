@@ -15,3 +15,4 @@ Search and analysis for logs written in Rust 🦀
   - [ ] Return logs from that contain sentence
   - [ ] Return logs from time period
   - [ ] Count logs quantity per selected time range
+- [ ] Serilog (C#) integration
