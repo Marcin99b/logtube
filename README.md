@@ -7,7 +7,7 @@ Search and analysis for logs written in Rust 🦀
 
 #### First stage
 
-- [ ] Store structured logs on disc
+- [x] Store structured logs on disc
 - [x] Expose tcp endpoint for logs gathering
 - [ ] Select tool for storing logs
   - https://github.com/gree/flare is used by Seq
@@ -15,4 +15,4 @@ Search and analysis for logs written in Rust 🦀
   - [ ] Return logs from that contain sentence
   - [ ] Return logs from time period
   - [ ] Count logs quantity per selected time range
-- [ ] Serilog (C#) integration
+- [x] Serilog (C#) integration
