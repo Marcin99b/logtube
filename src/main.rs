@@ -1,10 +1,23 @@
+use axum::{
+    response::IntoResponse,
+    routing::{get},
+    Json, Router,
+};
 use tokio::net::{TcpListener, TcpStream};
 use std::{fs, io::Write};
 
 #[tokio::main]
  async fn main() {
-     let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap(); 
+    let app = Router::new()
+        .route("/search", get(search));
 
+    let http_listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+
+    let _ = axum::serve(http_listener, app);
+
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap(); 
     let mut file = fs::File::create("logs.log").unwrap();
      loop {
          let (stream, _) = listener.accept().await.unwrap(); 
@@ -37,3 +50,8 @@ use std::{fs, io::Write};
      }
      return Ok(std::str::from_utf8(&buf).unwrap().trim_matches(char::from(0)).as_bytes().to_vec())
  }
+
+ async fn search(
+) -> impl IntoResponse {
+    Json("test")
+}
