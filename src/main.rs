@@ -1,15 +1,19 @@
 use tokio::net::{TcpListener, TcpStream};
+use std::{fs, io::Write};
 
 #[tokio::main]
  async fn main() {
      let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap(); 
 
+    let mut file = fs::File::create("logs.log").unwrap();
      loop {
          let (stream, _) = listener.accept().await.unwrap(); 
          stream.readable().await.unwrap();
-         let buf = read_all(&stream).await.unwrap();
-         let string = String::from_utf8(buf).unwrap();
-         println!("{}", string);
+         let mut buf = read_all(&stream).await.unwrap();
+         buf.push(10); //\n
+         let _ = file.write(&buf);
+         //let string = String::from_utf8(buf).unwrap();
+         //println!("{}", string);
      }
  }
 
