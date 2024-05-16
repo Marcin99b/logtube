@@ -3,6 +3,7 @@ use serde::Deserialize;
 use std::{
     fs,
     io::{Read, Write},
+    os::windows::fs::FileExt,
 };
 use tokio::net::{TcpListener, TcpStream};
 
@@ -63,13 +64,40 @@ struct SearchQuery {
 }
 
 async fn search(query: Query<SearchQuery>) -> impl IntoResponse {
-    //let search_bytes = query.phrase.as_bytes();
+    let search_bytes = query.phrase.as_bytes();
 
-    let mut file = fs::File::create("logs.log").unwrap();
+    let file = fs::File::create("logs.log").unwrap();
     let mut tmp_buf = [0; 4096];
-    let size = file.read(&mut tmp_buf).unwrap();
-    Json(size)
+
+    let mut iter: usize = 0;
+    loop {
+        let skip = iter * tmp_buf.len();
+        let offset: u64 = (match skip {
+            0 => 0,
+            _ => skip - search_bytes.len(),
+        })
+        .try_into()
+        .unwrap();
+        iter = iter + 1;
+
+        let size = file.seek_read(&mut tmp_buf, offset).unwrap();
+        if size == 0 {
+            break;
+        }
+
+        if let Some(_) = find_subsequence(&tmp_buf, search_bytes) {
+            return Json("Found");
+        }
+    }
+
+    Json("Not Found")
     //todo find search in file
+}
+
+fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+    haystack
+        .windows(needle.len())
+        .position(|window| window == needle)
 }
 
 //todo add unique newline
