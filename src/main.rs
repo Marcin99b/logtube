@@ -1,5 +1,9 @@
-use axum::{response::IntoResponse, routing::get, Json, Router};
-use std::{fs, io::Write};
+use axum::{extract::Query, response::IntoResponse, routing::get, Json, Router};
+use serde::Deserialize;
+use std::{
+    fs,
+    io::{Read, Write},
+};
 use tokio::net::{TcpListener, TcpStream};
 
 #[tokio::main]
@@ -14,10 +18,13 @@ async fn listen_tcp() {
         let (stream, _) = listener.accept().await.unwrap();
         stream.readable().await.unwrap();
         let mut buf = read_all(&stream).await.unwrap();
+
+        //\r\n is only at end of log
+        buf.remove(13); //\r
+        buf.push(13); //\n
         buf.push(10); //\n
+
         let _ = file.write(&buf);
-        //let string = String::from_utf8(buf).unwrap();
-        //println!("{}", string);
     }
 }
 
@@ -50,6 +57,20 @@ async fn read_all(stream: &TcpStream) -> Result<Vec<u8>, std::io::Error> {
         .to_vec());
 }
 
-async fn search() -> impl IntoResponse {
-    Json("test")
+#[derive(Deserialize)]
+struct SearchQuery {
+    phrase: String,
 }
+
+async fn search(query: Query<SearchQuery>) -> impl IntoResponse {
+    //let search_bytes = query.phrase.as_bytes();
+
+    let mut file = fs::File::create("logs.log").unwrap();
+    let mut tmp_buf = [0; 4096];
+    let size = file.read(&mut tmp_buf).unwrap();
+    Json(size)
+    //todo find search in file
+}
+
+//todo add unique newline
+//for example change all \r\n to \n and use \r\n as unique newline
