@@ -16,3 +16,5 @@ Search and analysis for logs written in Rust 🦀
   - [ ] Return logs from time period
   - [ ] Count logs quantity per selected time range
 - [x] Serilog (C#) integration
+- [ ] Use api keys in requests
+- [ ] Own log structure format
