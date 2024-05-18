@@ -18,3 +18,4 @@ Search and analysis for logs written in Rust 🦀
 - [x] Serilog (C#) integration
 - [ ] Use api keys in requests
 - [ ] Own log structure format
+- [ ] Configuration file
